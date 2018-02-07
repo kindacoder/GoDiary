@@ -2,14 +2,12 @@ const express=require('express');
 const app=express();
 const port=process.env.PORT || 5100;
 const mongoose=require('mongoose');
+const bodyParser=require('body-parser');
 const exphbs  = require('express-handlebars');
 
 //addding routers
 const notesRoute=require('./routes/notes')
 
-///using router
-
-app.use('/notes',notesRoute);
 
 
 
@@ -25,11 +23,16 @@ mongoose.connect('mongodb://godiary:godiary@ds145188.mlab.com:45188/godiary')
 var Note=require('./models/Notes');
 
 
-
+//using the body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
 ///serve static files
 app.use('/public',express.static('public'));
+
+///using router
+app.use('/notes',notesRoute);
 
 ///setting-up the views .. Hnadlebars
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -43,6 +46,7 @@ app.get('/',(req,res)=>{
 app.get('/about',(req,res)=>{
   res.render('about');
 })
+
 app.listen(port,()=>{
   console.log('Server started at port '+port);
 })
