@@ -3,6 +3,7 @@ const app=express();
 const port=process.env.PORT || 5100;
 const mongoose=require('mongoose');
 const bodyParser=require('body-parser');
+var methodOverride = require('method-override')
 const exphbs  = require('express-handlebars');
 
 //addding routers
@@ -26,6 +27,9 @@ var Note=require('./models/Notes');
 //using the body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+///Method-override middleware
+app.use(methodOverride('_method'))
 
 
 ///serve static files

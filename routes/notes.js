@@ -1,7 +1,16 @@
 const route=require('express').Router();
-
+const Note=require('../models/Notes')
+var methodOverride = require('method-override')
 route.get('/',(req,res)=>{
-  res.render('notes')
+  Note.find({},function(err,docs){
+    if(err){
+      console.log(err);
+
+    }else{
+
+      res.render('notes/index',{data:docs})
+    }
+  })
 })
 
 route.post('/',(req,res)=>{
@@ -24,12 +33,48 @@ route.post('/',(req,res)=>{
     new Note(newUser)
     .save()
     .then(idea=>{
-      res.redirect('/ideas');
+      res.redirect('/notes');
     })
   }
 })
 route.get('/add',(req,res)=>{
   res.render('notes/add')
+})
+
+//edit the notes
+
+route.get('/edit/:id',(req,res)=>{
+  //get the id from the req object and find them in mongodb and update it
+  Note.findOne({_id:req.params.id})
+.then((data)=>{
+  res.render('notes/edit',{data:data})
+})
+})
+
+
+///edit process
+route.put('/:id',(req,res)=>{
+  ///find a notes
+  Note.findOne({_id:req.params.id})
+  .then(data=>{
+    data.title=req.body.title;
+    data.details=req.body.details;
+    data.save()
+    .then(data=>{
+      res.redirect('/notes')
+    })
+  })
+
+})
+
+//deleting the notes
+route.delete('/:id',(req,res)=>{
+  //get the note and delete it
+  Note.findOne({_id:req.params.id})
+  .remove()
+  .then(data=>{
+    res.redirect('/notes')
+  })
 })
 
 module.exports=route;
