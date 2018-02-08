@@ -1,6 +1,7 @@
 const route=require('express').Router();
 const Note=require('../models/Notes')
 var methodOverride = require('method-override')
+var flash=require('connect-flash');
 route.get('/',(req,res)=>{
   Note.find({},function(err,docs){
     if(err){
@@ -33,6 +34,7 @@ route.post('/',(req,res)=>{
     new Note(newUser)
     .save()
     .then(idea=>{
+      req.flash('success_msg','New Notes added')
       res.redirect('/notes');
     })
   }
@@ -61,6 +63,7 @@ route.put('/:id',(req,res)=>{
     data.details=req.body.details;
     data.save()
     .then(data=>{
+req.flash('success_msg','Notes Updated')
       res.redirect('/notes')
     })
   })
@@ -73,6 +76,7 @@ route.delete('/:id',(req,res)=>{
   Note.findOne({_id:req.params.id})
   .remove()
   .then(data=>{
+    req.flash('success_msg','Notes removed');
     res.redirect('/notes')
   })
 })
