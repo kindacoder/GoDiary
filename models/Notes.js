@@ -6,7 +6,8 @@ const Schema=mongoose.Schema;
 const notesSchema=new Schema({
   title:{type:String,required:true},
   details:{type:String,required:true},
-  date:{type:Date,default:Date()}
+  date:{type:Date,default:Date()},
+  user:{type:String,required:true}
 })
 
 

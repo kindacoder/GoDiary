@@ -9,6 +9,7 @@ const methodOverride = require('method-override')
 const exphbs  = require('express-handlebars');
 const passport=require('passport')
 
+
 //addding routers
 const notesRoute=require('./routes/notes');
 const userRoute=require('./routes/users');

@@ -8,14 +8,12 @@ const {ensureAuthenticated}=require('../helpers/auth')
 
 
 route.get('/',ensureAuthenticated,(req,res)=>{
-  Note.find({},function(err,docs){
-    if(err){
-      console.log(err);
-
-    }else{
-
-      res.render('notes/index',{data:docs})
-    }
+  Note.find({user:req.user.id})
+  .sort({date:'desc'})
+  .then(data=>{
+    res.render('notes/index',{
+      data:data
+    });
   })
 })
 
@@ -34,7 +32,8 @@ route.post('/',ensureAuthenticated,(req,res)=>{
     //save data to mongodb
     const newUser={
       title:req.body.title,
-      details:req.body.details
+      details:req.body.details,
+      user:req.user.id
     }
     new Note(newUser)
     .save()
@@ -54,7 +53,12 @@ route.get('/edit/:id',ensureAuthenticated,(req,res)=>{
   //get the id from the req object and find them in mongodb and update it
   Note.findOne({_id:req.params.id})
 .then((data)=>{
-  res.render('notes/edit',{data:data})
+  if(data.user !=req.user.id){
+    req.flash('error_msg','You are not authorized');
+    res.redirect('/notes')
+  }else{
+    res.render('notes/edit',{data:data})
+  }
 })
 })
 
