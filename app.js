@@ -9,7 +9,8 @@ const methodOverride = require('method-override')
 const exphbs  = require('express-handlebars');
 
 //addding routers
-const notesRoute=require('./routes/notes')
+const notesRoute=require('./routes/notes');
+const userRoute=require('./routes/users');
 
 
 
@@ -57,12 +58,11 @@ app.use('/public',express.static('public'));
 
 ///using router
 app.use('/notes',notesRoute);
+app.use('/users',userRoute);
 
 ///setting-up the views .. Hnadlebars
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
-
-
 
 
 app.get('/',(req,res)=>{

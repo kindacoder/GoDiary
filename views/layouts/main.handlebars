@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Main Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/css/style.css">
   </head>
   <body>
     <!-- Navbar from Navbar Partials -->
@@ -13,8 +14,11 @@
 
 <div class="container">
   <!-- Messages from _msg Partials -->
+
   {{> _msg}}
-    {{{body}}}
+  {{> _errors}}
+
+  {{{body}}}
 
 </div>
 
