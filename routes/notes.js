@@ -2,7 +2,12 @@ const route=require('express').Router();
 const Note=require('../models/Notes')
 var methodOverride = require('method-override')
 var flash=require('connect-flash');
-route.get('/',(req,res)=>{
+
+//load  helpers
+const {ensureAuthenticated}=require('../helpers/auth')
+
+
+route.get('/',ensureAuthenticated,(req,res)=>{
   Note.find({},function(err,docs){
     if(err){
       console.log(err);
@@ -14,7 +19,7 @@ route.get('/',(req,res)=>{
   })
 })
 
-route.post('/',(req,res)=>{
+route.post('/',ensureAuthenticated,(req,res)=>{
   ///check errors
   const errors=[];
   if(!req.body.title){
@@ -39,13 +44,13 @@ route.post('/',(req,res)=>{
     })
   }
 })
-route.get('/add',(req,res)=>{
+route.get('/add',ensureAuthenticated,(req,res)=>{
   res.render('notes/add')
 })
 
 //edit the notes
 
-route.get('/edit/:id',(req,res)=>{
+route.get('/edit/:id',ensureAuthenticated,(req,res)=>{
   //get the id from the req object and find them in mongodb and update it
   Note.findOne({_id:req.params.id})
 .then((data)=>{
@@ -55,7 +60,7 @@ route.get('/edit/:id',(req,res)=>{
 
 
 ///edit process
-route.put('/:id',(req,res)=>{
+route.put('/:id',ensureAuthenticated,ensureAuthenticated,(req,res)=>{
   ///find a notes
   Note.findOne({_id:req.params.id})
   .then(data=>{
@@ -71,7 +76,7 @@ req.flash('success_msg','Notes Updated')
 })
 
 //deleting the notes
-route.delete('/:id',(req,res)=>{
+route.delete('/:id',ensureAuthenticated,(req,res)=>{
   //get the note and delete it
   Note.findOne({_id:req.params.id})
   .remove()

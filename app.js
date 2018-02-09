@@ -7,10 +7,14 @@ const session=require('express-session');
 const flash=require('connect-flash');
 const methodOverride = require('method-override')
 const exphbs  = require('express-handlebars');
+const passport=require('passport')
 
 //addding routers
 const notesRoute=require('./routes/notes');
 const userRoute=require('./routes/users');
+
+//passport config
+require('./config/passport')(passport)
 
 
 
@@ -42,6 +46,10 @@ app.use(session({
 
 }))
 
+//passport middleware
+app.use(passport.initialize());
+  app.use(passport.session());
+
 
 app.use(flash());
 ///setting some global variables for messages
@@ -49,6 +57,7 @@ app.use(function(req,res,next){
   res.locals.success_msg=req.flash('success_msg');
   res.locals.error_msg=req.flash('error_msg');
   res.locals.error=req.flash('error');
+  res.locals.user=req.user || null;
   next();
 
 })
